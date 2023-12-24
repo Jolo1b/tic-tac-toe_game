@@ -1,3 +1,15 @@
 {
-  "description": ""
+  "name": "tic-tac-toe_game",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.c",
+  "scripts": {
+    "proc": "gcc src/main.c -o tic-tac-toe.exe"
+  },
+  "keywords": [
+    "game",
+    "c"
+  ],
+  "author": "Joel Bartok",
+  "license": "MIT"
 }
