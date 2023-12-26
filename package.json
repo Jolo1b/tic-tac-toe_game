@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/main.c",
   "scripts": {
-    "proc": "gcc src/main.c -o tic-tac-toe.exe"
+    "proc": "gcc src/main.c -m32 -o dist/tic-tac-toe_x32.exe && gcc src/main.c -m64 -o dist/tic-tac-toe_x64.exe"
   },
   "keywords": [
     "game",
