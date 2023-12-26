@@ -46,16 +46,13 @@ short ch;
 short x = 0;
 short y = 0;
 
-void gameOver(){
-    if(ws.y == -1){
+void gameOver(short endGame){
+
+    if(ws.y == -1 || ws.x == -1){
         for(short i = 0;i<3;i++){
-            setLocation(ws.x, i);
+            if(ws.x == -1) setLocation(i, ws.y);
+            else setLocation(ws.x, i); 
             printf("\x1b[31m%c\x1b[0m", ws.player);    
-        }
-    } else if(ws.x == -1){
-        for(short i = 0;i<3;i++){
-            setLocation(i, ws.y);
-            printf("\x1b[31m%c\x1b[0m", ws.player);   
         }
     } else if(ws.x == -2){
         for(short i = 0;i<3;i++){
@@ -67,6 +64,14 @@ void gameOver(){
             setLocation(j, i);
             printf("\x1b[31m%c\x1b[0m", ws.player);    
         }
+    }
+
+    printf("\x1b[13;1H\x1b[2Kplayer \x1b[32m%c\x1b[0m win!", ws.player);
+    getch();
+
+    if(endGame){
+        printf("\x1b[?1049l\x1b[?47l");
+        exit(0);
     }
 }
 
@@ -116,43 +121,24 @@ int main(){
                         ws.x = -1;
                         ws.y = i;
                         ws.player = grid[i][0];
-                        gameOver();
-                        printf("\x1b[13;1H\x1b[2Kplayer \x1b[32m%c\x1b[0m win!", grid[i][0]);
-                        getch();
-                        printf("\x1b[?1049l\x1b[?47l");
-                        return 0;
-                    }
-                }
-
-                for(short i = 0;i<3;i++){
-                    if(grid[0][i] != ' ' && grid[0][i] == grid[1][i] && grid[0][i] == grid[2][i]){
+                        gameOver(1);
+                    } else if(grid[0][i] != ' ' && grid[0][i] == grid[1][i] && grid[0][i] == grid[2][i]){
                         ws.y = -1;
                         ws.x = i;
                         ws.player = grid[0][i];
-                        gameOver();
-                        printf("\x1b[13;1H\x1b[2Kplayer \x1b[32m%c\x1b[0m win!", grid[0][i]);
-                        getch();
-                        printf("\x1b[?1049l\x1b[?47l");
-                        return 0;
+                        gameOver(1);
                     }
                 }
 
                 if(grid[0][0] != ' ' && grid[0][0] == grid[1][1] && grid[0][0] == grid[2][2]){
                     ws.x = -2;
                     ws.player = grid[0][0];
-                    gameOver();
-                    printf("\x1b[13;1H\x1b[2Kplayer \x1b[32m%c\x1b[0m win!", ws.player);
-                    getch();
-                    printf("\x1b[?1049l\x1b[?47l");
+                    gameOver(1);
                     return 0;
                 } else if(grid[0][2] != ' ' && grid[0][2] == grid[1][1] && grid[0][2] == grid[2][0]){
                     ws.y = -2;
                     ws.player = grid[0][2];
-                    gameOver();
-                    printf("\x1b[13;1H\x1b[2Kplayer \x1b[32m%c\x1b[0m win!", ws.player);
-                    getch();
-                    printf("\x1b[?1049l\x1b[?47l");
-                    return 0;
+                    gameOver(1);
                 }
 
             } else {
