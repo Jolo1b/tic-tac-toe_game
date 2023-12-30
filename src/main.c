@@ -20,6 +20,7 @@ void drowGrid(){
 int setLocation(short x, short y){
     if((y <= 2 && y >= 0) && (x <= 2 && x >= 0)) {
 
+        // location calculation
         x = (8 * x) + 4;
         y = (4 * y) + 2;
         
@@ -28,6 +29,7 @@ int setLocation(short x, short y){
     } else return 1;
 }
 
+// the structure in which the data about the winner will be preserved
 struct WinnerScore {
     short x;
     short y;
@@ -47,7 +49,7 @@ short x = 0;
 short y = 0;
 
 void gameOver(short endGame){
-
+    // rendering the result
     if(ws.y == -1 || ws.x == -1){
         for(short i = 0;i<3;i++){
             if(ws.x == -1) setLocation(i, ws.y);
@@ -87,11 +89,17 @@ int main(){
 
     while(1){
         ch = getch();
+        // 224 = arrow
         if(ch == 224){
             printf("\x1b[14;1H\x1b[2K");
             ch = getch();
 
             if(1 == (y <= 2 && y >= 0) && (x <= 2 && x >= 0)) {
+                /*
+                  72 = arrow up
+                  80 = arrow down
+                  77 = arrow right
+                */
                 if(ch == 72) y--;
                 else if(ch == 80) y++;
                 else if(ch == 77) x++;
@@ -116,6 +124,7 @@ int main(){
                     player = 'O';
                 }
              
+                // it is checked whether someone gave a winning combination
                 for(short i = 0;i<3;i++){
                     if(grid[i][0] != ' ' && grid[i][0] == grid[i][1] && grid[i][0] == grid[i][2]){
                         ws.x = -1;
@@ -140,6 +149,7 @@ int main(){
                     ws.player = grid[0][2];
                     gameOver(1);
                 }
+                // end of control
 
             } else {
                 printf("\x1b[14;1H\x1b[31myou cannot occupy an occupied square!\x1b[0m");
