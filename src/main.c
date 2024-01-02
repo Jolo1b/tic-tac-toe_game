@@ -1,8 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <conio.h>
+#include <pthread.h>
 
-void drowGrid(){
+void *drowGrid(){
     printf("\x1b[1;1H");
     printf("       |       |       \n");
     printf("       |       |       \n");
@@ -47,6 +48,7 @@ char player = 'O';
 short ch;
 short x = 0;
 short y = 0;
+pthread_t th1;
 
 void gameOver(short endGame){
     // rendering the result
@@ -69,13 +71,42 @@ void gameOver(short endGame){
     }
 
     printf("\x1b[13;1H\x1b[2Kplayer \x1b[32m%c\x1b[0m win!", ws.player);
-    getch();
+    getc(stdin);
 
     if(endGame){
         printf("\x1b[?1049l\x1b[?47l");
         exit(0);
     }
 }
+
+void *checkScore(){
+    // it is checked whether someone gave a winning combination
+    for(short i = 0;i<3;i++){
+        if(grid[i][0] != ' ' && grid[i][0] == grid[i][1] && grid[i][0] == grid[i][2]){
+            ws.x = -1;
+            ws.y = i;
+            ws.player = grid[i][0];
+            gameOver(1);
+        } else if(grid[0][i] != ' ' && grid[0][i] == grid[1][i] && grid[0][i] == grid[2][i]){
+            ws.y = -1;
+            ws.x = i;
+            ws.player = grid[0][i];
+            gameOver(1);
+        }
+    }
+
+    if(grid[0][0] != ' ' && grid[0][0] == grid[1][1] && grid[0][0] == grid[2][2]){
+        ws.x = -2;
+        ws.player = grid[0][0];
+        gameOver(1);
+        return 0;
+    } else if(grid[0][2] != ' ' && grid[0][2] == grid[1][1] && grid[0][2] == grid[2][0]){
+        ws.y = -2;
+        ws.player = grid[0][2];
+        gameOver(1);
+    }
+}
+
 
 int main(){
 
@@ -86,6 +117,7 @@ int main(){
     printf("\x1b[12;1H=======================\n");
     printf("\x1b[0mIt's player \x1b[33m%c\x1b[0m turn.", player);
     setLocation(x, y);
+
 
     while(1){
         ch = getch();
@@ -124,32 +156,7 @@ int main(){
                     player = 'O';
                 }
              
-                // it is checked whether someone gave a winning combination
-                for(short i = 0;i<3;i++){
-                    if(grid[i][0] != ' ' && grid[i][0] == grid[i][1] && grid[i][0] == grid[i][2]){
-                        ws.x = -1;
-                        ws.y = i;
-                        ws.player = grid[i][0];
-                        gameOver(1);
-                    } else if(grid[0][i] != ' ' && grid[0][i] == grid[1][i] && grid[0][i] == grid[2][i]){
-                        ws.y = -1;
-                        ws.x = i;
-                        ws.player = grid[0][i];
-                        gameOver(1);
-                    }
-                }
-
-                if(grid[0][0] != ' ' && grid[0][0] == grid[1][1] && grid[0][0] == grid[2][2]){
-                    ws.x = -2;
-                    ws.player = grid[0][0];
-                    gameOver(1);
-                    return 0;
-                } else if(grid[0][2] != ' ' && grid[0][2] == grid[1][1] && grid[0][2] == grid[2][0]){
-                    ws.y = -2;
-                    ws.player = grid[0][2];
-                    gameOver(1);
-                }
-                // end of control
+                pthread_create(&th1, NULL, checkScore, NULL);
 
             } else {
                 printf("\x1b[14;1H\x1b[31myou cannot occupy an occupied square!\x1b[0m");
