@@ -3,7 +3,7 @@
 #include <conio.h>
 #include <pthread.h>
 
-void *drowGrid(){
+void *drawGrid(){
     printf("\x1b[1;1H");
     printf("       |       |       \n");
     printf("       |       |       \n");
@@ -113,7 +113,7 @@ int main(){
     printf("\x1b[?47h\x1b[?1049h");
     printf("\x1b[1;1H");
     
-    drowGrid();
+    drawGrid();
     printf("\x1b[12;1H=======================\n");
     printf("\x1b[0mIt's player \x1b[33m%c\x1b[0m turn.", player);
     setLocation(x, y);
