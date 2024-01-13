@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <pthread.h>
+#include "window.h"
 
 void *drawGrid(){
     printf("\x1b[1;1H");
@@ -99,7 +100,6 @@ void *checkScore(){
         ws.x = -2;
         ws.player = grid[0][0];
         gameOver(1);
-        return 0;
     } else if(grid[0][2] != ' ' && grid[0][2] == grid[1][1] && grid[0][2] == grid[2][0]){
         ws.y = -2;
         ws.player = grid[0][2];
@@ -109,6 +109,9 @@ void *checkScore(){
 
 
 int main(){
+
+    char *title = "tic-tac-toe";
+    wTitle(title);
 
     printf("\x1b[?47h\x1b[?1049h");
     printf("\x1b[1;1H");
